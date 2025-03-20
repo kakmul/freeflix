@@ -1,6 +1,6 @@
-const TMDB_API_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhOThkMTZhYmIzMjMxMjUzMTlhNjkxNzc4YjA3N2E1YSIsIm5iZiI6MTc0MjQ3NDc1NS4xMzUsInN1YiI6IjY3ZGMwZTAzOGFmNDUyZjMwZmU5ZWY5NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OFsuD4PBehORMe03Sfg9pR3igHxJJiRkrrsZTLDfGpI';
-const BASE_URL = 'https://api.themoviedb.org/3';
-const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
+const BASE_URL = process.env.BASE_URL;
+const IMAGE_BASE_URL = process.env.IMAGE_BASE_UR;
 
 export interface Genre {
   id: number;
