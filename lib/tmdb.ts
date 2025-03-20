@@ -27,6 +27,24 @@ export interface Movie {
   runtime?: number;
 }
 
+export interface MovieVideo {
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  key: string;
+  site: string;
+  size: number;
+  type: string;
+  official: boolean;
+  published_at: string;
+  id: string;
+}
+
+export interface MovieVideoResponse {
+  id: number;
+  results: MovieVideo[];
+}
+
 export interface MovieResponse {
   page: number;
   results: Movie[];
@@ -46,10 +64,6 @@ const fetchTMDB = async (endpoint: string, params: Record<string, string> = {}) 
     next: { revalidate: 3600 } // Cache for 1 hour
   });
 
-  // if (!response.ok) {
-  //   throw new Error('Failed to fetch data');
-  // }
-
   return response.json();
 }
 
@@ -68,6 +82,12 @@ export const tmdb = {
   
   getMovieDetails: (id: string, language = 'id-ID') => 
     fetchTMDB(`/movie/${id}`, { language }),
+
+  getMovieVideos: (id: string, language = 'en-US') =>
+    fetchTMDB(`/movie/${id}/videos`, { language }),
+
+  getMovieRecommendations: (id: string, language = 'en-US', page = '1') =>
+    fetchTMDB(`/movie/${id}/recommendations`, { language, page }),
 
   searchMovies: (query: string, page = '1', language = 'id-ID') =>
     fetchTMDB('/search/movie', { query, page, language, include_adult: 'false' }),

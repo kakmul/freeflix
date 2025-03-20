@@ -3,12 +3,28 @@
 import Link from 'next/link';
 import { Movie } from '@/lib/tmdb';
 import { tmdb } from '@/lib/tmdb';
+import { Heart } from 'lucide-react';
+import { toggleFavoriteMovie, isFavoriteMovie } from '@/lib/favorites';
+import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 interface MovieCardProps {
   movie: Movie;
 }
 
 export function MovieCard({ movie }: MovieCardProps) {
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    setIsFavorite(isFavoriteMovie(movie.id));
+  }, [movie.id]);
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const isNowFavorite = toggleFavoriteMovie(movie);
+    setIsFavorite(isNowFavorite);
+  };
+
   return (
     <div className="relative flex-shrink-0 group/card">
       <Link href={`/movie/${movie.id}`}>
@@ -30,6 +46,20 @@ export function MovieCard({ movie }: MovieCardProps) {
               </span>
             </div>
           </div>
+          <button
+            onClick={handleFavoriteClick}
+            className={cn(
+              "absolute top-2 right-2 p-2 rounded-full bg-black/50 transition-opacity",
+              "opacity-0 group-hover/card:opacity-100 hover:bg-black/70"
+            )}
+          >
+            <Heart
+              className={cn(
+                "w-5 h-5 transition-colors",
+                isFavorite ? "fill-red-500 stroke-red-500" : "fill-none stroke-white"
+              )}
+            />
+          </button>
         </div>
       </Link>
     </div>

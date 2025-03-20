@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import { tmdb } from '@/lib/tmdb';
 import { Navbar } from '@/components/navbar';
 import { VideoPlayer } from '@/components/video-player';
+import { MovieVideos } from '@/components/movie-videos';
+import { MovieRow } from '@/components/movie-row';
 import { notFound } from 'next/navigation';
 
 interface MoviePageProps {
@@ -13,9 +15,6 @@ interface MoviePageProps {
 export async function generateMetadata({ params }: MoviePageProps): Promise<Metadata> {
   const movie = await tmdb.getMovieDetails(params.id);
   
-  
-
-  // If movie details are empty or not found, return a 404 page
   if (!movie || !movie.id) {
     notFound();
   }
@@ -32,7 +31,6 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
   };
 }
 
-// Generate static params for the most popular movies
 export async function generateStaticParams() {
   const [trending, topRated, nowPlaying] = await Promise.all([
     tmdb.getTrendingMovies(),
@@ -52,7 +50,11 @@ export async function generateStaticParams() {
 }
 
 export default async function MoviePage({ params }: MoviePageProps) {
-  const movie = await tmdb.getMovieDetails(params.id);
+  const [movie, videos, recommendations] = await Promise.all([
+    tmdb.getMovieDetails(params.id),
+    tmdb.getMovieVideos(params.id),
+    tmdb.getMovieRecommendations(params.id)
+  ]);
   
   return (
     <main className="min-h-screen bg-background">
@@ -105,6 +107,16 @@ export default async function MoviePage({ params }: MoviePageProps) {
                 </div>
               </div>
             </div>
+          </div>
+
+          {recommendations.results.length > 0 && (
+            <div className="mt-12">
+              <MovieRow title="More Like This" movies={recommendations.results} />
+            </div>
+          )}
+
+          <div className="mt-12">
+            <MovieVideos videos={videos.results} />
           </div>
         </div>
       </div>

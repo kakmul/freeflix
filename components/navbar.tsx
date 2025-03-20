@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Globe, Search } from 'lucide-react';
+import { Globe, Search, Heart } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -70,6 +70,9 @@ export function Navbar() {
               <Link href="/new" className="hover:text-primary transition-colors">
                 New & Popular
               </Link>
+              <Link href="/favorites" className="hover:text-primary transition-colors">
+                My List
+              </Link>
             </div>
           </div>
 
@@ -95,6 +98,12 @@ export function Navbar() {
                 </Button>
               </form>
             </div>
+
+            <Link href="/favorites">
+              <Button variant="ghost" size="icon">
+                <Heart className="h-5 w-5" />
+              </Button>
+            </Link>
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
