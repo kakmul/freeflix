@@ -55,7 +55,18 @@ export default async function MoviePage({ params }: MoviePageProps) {
     tmdb.getMovieVideos(params.id),
     tmdb.getMovieRecommendations(params.id)
   ]);
-  
+
+  // Validate movie data
+  if (!movie || !movie.id) {
+    notFound();
+  }
+
+  // Validate videos data
+  const hasVideos = videos && videos.results && videos.results.length > 0;
+
+  // Validate recommendations data
+  const hasRecommendations = recommendations && recommendations.results && recommendations.results.length > 0;
+
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
@@ -109,15 +120,17 @@ export default async function MoviePage({ params }: MoviePageProps) {
             </div>
           </div>
 
-          {recommendations.results.length > 0 && (
+          {hasRecommendations && (
             <div className="mt-12">
               <MovieRow title="More Like This" movies={recommendations.results} />
             </div>
           )}
 
-          <div className="mt-12">
-            <MovieVideos videos={videos.results} />
-          </div>
+          {hasVideos && (
+            <div className="mt-12">
+              <MovieVideos videos={videos.results} />
+            </div>
+          )}
         </div>
       </div>
     </main>
