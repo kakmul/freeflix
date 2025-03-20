@@ -14,8 +14,8 @@ interface SearchPageProps {
 }
 
 export const metadata: Metadata = {
-  title: 'Search Movies - Netflix',
-  description: 'Search for movies on Netflix',
+  title: 'Search Movies - 123Movies',
+  description: 'Search for movies on 123Movies',
 };
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {

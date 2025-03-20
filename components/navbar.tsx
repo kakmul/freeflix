@@ -55,7 +55,7 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
             <Link href="/" className="text-2xl font-bold text-primary">
-              NETFLIX
+            123Movies
             </Link>
             <div className="hidden md:flex items-center gap-6">
               <Link href="/" className="hover:text-primary transition-colors">

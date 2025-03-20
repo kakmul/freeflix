@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'TV Shows - Netflix',
-  description: 'Browse all TV shows available on Netflix',
+  title: 'TV Shows - 123Movies',
+  description: 'Browse all TV shows available on 123Movies',
 };
 
 export default function TVLayout({

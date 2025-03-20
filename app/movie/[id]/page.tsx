@@ -20,9 +20,9 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
   }
   
   return {
-    title: `${movie.title} - Netflix`,
+    title: `Watch ${movie.title} Online Free HD - 123movies`,
     description: movie.overview,
-    keywords: `${movie.title}, movie, netflix, streaming, ${movie.genres?.map((genre:any) => genre.name).join(', ')}`,
+    keywords: `${movie.title}, movie, 123movies, streaming, ${movie.genres?.map((genre:any) => genre.name).join(', ')}`,
     openGraph: {
       title: movie.title,
       description: movie.overview,

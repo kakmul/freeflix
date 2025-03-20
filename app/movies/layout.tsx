@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Movies - Netflix',
-  description: 'Browse all movies available on Netflix',
+  title: 'Movies - 123Movies',
+  description: 'Browse all movies available on 123Movies',
 }
 
 export default function MoviesLayout({
