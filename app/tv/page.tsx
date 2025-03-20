@@ -21,7 +21,7 @@ export default async function TVPage({ searchParams }: TVPageProps) {
         <h1 className="text-4xl font-bold mb-8">Top Rated TV Shows</h1>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {topRated.results.map((show) => (
+          {topRated.results.map((show:any) => (
             <div key={show.id} className="w-full">
               <MovieCard movie={show} />
             </div>

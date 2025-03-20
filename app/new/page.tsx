@@ -15,7 +15,7 @@ export default async function NewAndPopularPage() {
         <section className="mb-12">
           <h2 className="text-4xl font-bold mb-8">New Releases</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {nowPlaying.results.slice(0, 10).map((movie) => (
+            {nowPlaying.results.slice(0, 10).map((movie:any) => (
               <div key={movie.id} className="w-full">
                 <MovieCard movie={movie} />
               </div>
@@ -26,7 +26,7 @@ export default async function NewAndPopularPage() {
         <section>
           <h2 className="text-4xl font-bold mb-8">Popular This Week</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {trending.results.slice(0, 10).map((movie) => (
+            {trending.results.slice(0, 10).map((movie:any) => (
               <div key={movie.id} className="w-full">
                 <MovieCard movie={movie} />
               </div>

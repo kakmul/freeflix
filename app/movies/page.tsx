@@ -22,7 +22,7 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
         <h1 className="text-4xl font-bold mb-8">Trending Movies</h1>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {trending.results.map((movie) => (
+          {trending.results.map((movie:any) => (
             <div key={movie.id} className="w-full">
               <MovieCard movie={movie} />
             </div>
