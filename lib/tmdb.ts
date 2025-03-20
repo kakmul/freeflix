@@ -46,9 +46,9 @@ const fetchTMDB = async (endpoint: string, params: Record<string, string> = {}) 
     next: { revalidate: 3600 } // Cache for 1 hour
   });
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch data');
-  }
+  // if (!response.ok) {
+  //   throw new Error('Failed to fetch data');
+  // }
 
   return response.json();
 }

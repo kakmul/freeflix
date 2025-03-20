@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { tmdb } from '@/lib/tmdb';
 import { Navbar } from '@/components/navbar';
 import { VideoPlayer } from '@/components/video-player';
+import { notFound } from 'next/navigation';
 
 interface MoviePageProps {
   params: {
@@ -12,6 +13,12 @@ interface MoviePageProps {
 export async function generateMetadata({ params }: MoviePageProps): Promise<Metadata> {
   const movie = await tmdb.getMovieDetails(params.id);
   
+  
+
+  // If movie details are empty or not found, return a 404 page
+  if (!movie || !movie.id) {
+    notFound();
+  }
   
   return {
     title: `${movie.title} - Netflix`,
