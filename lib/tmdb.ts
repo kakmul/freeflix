@@ -1,6 +1,6 @@
-const TMDB_API_KEY = process.env.TMDB_API_KEY;
-const BASE_URL = process.env.BASE_URL;
-const IMAGE_BASE_URL = process.env.IMAGE_BASE_UR;
+const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const IMAGE_BASE_URL = process.env.NEXT_PUBLIC_IMAGE_BASE_UR;
 
 export interface Genre {
   id: number;

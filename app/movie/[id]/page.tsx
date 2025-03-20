@@ -12,6 +12,7 @@ interface MoviePageProps {
 export async function generateMetadata({ params }: MoviePageProps): Promise<Metadata> {
   const movie = await tmdb.getMovieDetails(params.id);
   
+  
   return {
     title: `${movie.title} - Netflix`,
     description: movie.overview,
