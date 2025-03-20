@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
   return {
     title: `${movie.title} - Netflix`,
     description: movie.overview,
-    keywords: `${movie.title}, movie, netflix, streaming, ${movie.genres?.map((genre) => genre.name).join(', ')}`,
+    keywords: `${movie.title}, movie, netflix, streaming, ${movie.genres?.map((genre:any) => genre.name).join(', ')}`,
     openGraph: {
       title: movie.title,
       description: movie.overview,
@@ -86,13 +86,13 @@ export default async function MoviePage({ params }: MoviePageProps) {
                 <div>
                   <span className="text-white/60">Cast:</span>{' '}
                   <span className="text-white/90">
-                    {movie.genres?.map(genre => genre.name).join(', ')}
+                    {movie.genres?.map((genre:any) => genre.name).join(', ')}
                   </span>
                 </div>
                 <div>
                   <span className="text-white/60">Genres:</span>{' '}
                   <span className="text-white/90">
-                    {movie.genres?.map(genre => genre.name).join(', ')}
+                    {movie.genres?.map((genre:any) => genre.name).join(', ')}
                   </span>
                 </div>
               </div>
