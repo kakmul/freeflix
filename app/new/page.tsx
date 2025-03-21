@@ -1,11 +1,19 @@
 import { Navbar } from '@/components/navbar';
 import { MovieCard } from '@/components/ui/movie-card';
 import { tmdb } from '@/lib/tmdb';
+import type { LanguageCode } from '@/lib/tmdb';
 
-export default async function NewAndPopularPage() {
+interface NewAndPopularPageProps {
+  searchParams: {
+    lang?: string;
+  };
+}
+
+export default async function NewAndPopularPage({ searchParams }: NewAndPopularPageProps) {
+  const language = (searchParams.lang || 'en-US') as LanguageCode;
   const [trending, nowPlaying] = await Promise.all([
-    tmdb.getTrendingMovies(),
-    tmdb.getNowPlaying(),
+    tmdb.getTrendingMovies('1', language),
+    tmdb.getNowPlaying('1', language),
   ]);
 
   return (

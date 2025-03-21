@@ -2,16 +2,19 @@ import { Navbar } from '@/components/navbar';
 import { MovieCard } from '@/components/ui/movie-card';
 import { tmdb } from '@/lib/tmdb';
 import { MoviePagination } from '@/components/movie-pagination';
+import type { LanguageCode } from '@/lib/tmdb';
 
 interface TVPageProps {
   searchParams: {
     page?: string;
+    lang?: string;
   };
 }
 
 export default async function TVPage({ searchParams }: TVPageProps) {
   const page = searchParams.page || '1';
-  const topRated = await tmdb.getTopRatedTV(page);
+  const language = (searchParams.lang || 'en-US') as LanguageCode;
+  const topRated = await tmdb.getTopRatedTV(page, language);
   const totalPages = Math.min(topRated.total_pages, 500); // TMDB API limits to 500 pages
 
   return (

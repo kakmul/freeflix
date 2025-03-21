@@ -6,7 +6,8 @@ import { tmdb } from '@/lib/tmdb';
 import { Heart } from 'lucide-react';
 import { toggleFavoriteMovie, isFavoriteMovie } from '@/lib/favorites';
 import { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn, createMovieSlug } from '@/lib/utils';
+import { useSearchParams } from 'next/navigation';
 
 interface MovieCardProps {
   movie: Movie;
@@ -14,6 +15,8 @@ interface MovieCardProps {
 
 export function MovieCard({ movie }: MovieCardProps) {
   const [isFavorite, setIsFavorite] = useState(false);
+  const searchParams = useSearchParams();
+  const lang = searchParams.get('lang');
 
   useEffect(() => {
     setIsFavorite(isFavoriteMovie(movie.id));
@@ -25,9 +28,11 @@ export function MovieCard({ movie }: MovieCardProps) {
     setIsFavorite(isNowFavorite);
   };
 
+  const movieUrl = `/movie/${movie.id}/${createMovieSlug(movie.title)}${lang ? `?lang=${lang}` : ''}`;
+
   return (
     <div className="relative flex-shrink-0 group/card">
-      <Link href={`/movie/${movie.id}`}>
+      <Link href={movieUrl} scroll={false}>
         <div className="relative w-[200px] h-[300px] overflow-hidden rounded-md">
           <img
             src={tmdb.getImageUrl(movie.poster_path, 'w500')}

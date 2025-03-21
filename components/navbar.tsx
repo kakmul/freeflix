@@ -1,30 +1,19 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Globe, Search, Heart } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
-const LANGUAGES = [
-  { code: 'id-ID', label: 'Indonesia' },
-  { code: 'en-US', label: 'English' },
-];
-
-const REGIONS = [
-  { code: 'ID', label: 'Indonesia' },
-  { code: 'US', label: 'United States' },
-];
+import { Search, Heart } from 'lucide-react';
+import { LanguageSelector } from '@/components/language-selector';
+import { MobileMenu } from '@/components/mobile-menu';
+import type { LanguageCode } from '@/lib/tmdb';
 
 export function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -41,8 +30,21 @@ export function Navbar() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      const params = new URLSearchParams(searchParams.toString());
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}&lang=${params.get('lang') || 'en-US'}`, { scroll: false });
     }
+  };
+
+  const handleLanguageChange = (language: LanguageCode) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('lang', language);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  const getNavLink = (path: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    const lang = params.get('lang');
+    return `${path}${lang ? `?lang=${lang}` : ''}`;
   };
 
   return (
@@ -53,24 +55,25 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-8">
-            <Link href="/" className="text-2xl font-bold text-primary">
+          <div className="flex items-center gap-4">
+            <MobileMenu />
+            <Link href={getNavLink('/')} scroll={false} className="text-2xl font-bold text-primary">
             123Movies
             </Link>
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="hover:text-primary transition-colors">
+              <Link href={getNavLink('/')} scroll={false} className="hover:text-primary transition-colors">
                 Home
               </Link>
-              <Link href="/movies" className="hover:text-primary transition-colors">
+              <Link href={getNavLink('/movies')} scroll={false} className="hover:text-primary transition-colors">
                 Movies
               </Link>
-              <Link href="/tv" className="hover:text-primary transition-colors">
+              <Link href={getNavLink('/tv')} scroll={false} className="hover:text-primary transition-colors">
                 TV Shows
               </Link>
-              <Link href="/new" className="hover:text-primary transition-colors">
+              <Link href={getNavLink('/new')} scroll={false} className="hover:text-primary transition-colors">
                 New & Popular
               </Link>
-              <Link href="/favorites" className="hover:text-primary transition-colors">
+              <Link href={getNavLink('/favorites')} scroll={false} className="hover:text-primary transition-colors">
                 My List
               </Link>
             </div>
@@ -99,41 +102,13 @@ export function Navbar() {
               </form>
             </div>
 
-            <Link href="/favorites">
+            <Link href={getNavLink('/favorites')} scroll={false}>
               <Button variant="ghost" size="icon">
                 <Heart className="h-5 w-5" />
               </Button>
             </Link>
             
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Globe className="h-5 w-5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <div className="p-2">
-                  <div className="text-sm font-medium text-muted-foreground mb-2">
-                    Language
-                  </div>
-                  {LANGUAGES.map((lang) => (
-                    <DropdownMenuItem key={lang.code}>
-                      {lang.label}
-                    </DropdownMenuItem>
-                  ))}
-                </div>
-                <div className="p-2 border-t">
-                  <div className="text-sm font-medium text-muted-foreground mb-2">
-                    Region
-                  </div>
-                  {REGIONS.map((region) => (
-                    <DropdownMenuItem key={region.code}>
-                      {region.label}
-                    </DropdownMenuItem>
-                  ))}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <LanguageSelector onLanguageChange={handleLanguageChange} />
           </div>
         </div>
       </div>

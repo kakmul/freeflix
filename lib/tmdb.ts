@@ -52,6 +52,68 @@ export interface MovieResponse {
   total_results: number;
 }
 
+// Supported languages based on TMDB API
+export const SUPPORTED_LANGUAGES = {
+  'ar-AE': 'Arabic',
+  'az-AZ': 'Azerbaijani',
+  'bg-BG': 'Bulgarian',
+  'bn-BD': 'Bengali',
+  'ca-ES': 'Catalan',
+  'ch-GU': 'Chamorro',
+  'cs-CZ': 'Czech',
+  'da-DK': 'Danish',
+  'de-DE': 'German',
+  'el-GR': 'Greek',
+  'en-US': 'English (US)',
+  'en-GB': 'English (UK)',
+  'eo-EO': 'Esperanto',
+  'es-ES': 'Spanish (Spain)',
+  'es-MX': 'Spanish (Mexico)',
+  'et-EE': 'Estonian',
+  'eu-ES': 'Basque',
+  'fa-IR': 'Persian',
+  'fi-FI': 'Finnish',
+  'fr-FR': 'French',
+  'he-IL': 'Hebrew',
+  'hi-IN': 'Hindi',
+  'hu-HU': 'Hungarian',
+  'id-ID': 'Indonesian',
+  'it-IT': 'Italian',
+  'ja-JP': 'Japanese',
+  'ka-GE': 'Georgian',
+  'kk-KZ': 'Kazakh',
+  'kn-IN': 'Kannada',
+  'ko-KR': 'Korean',
+  'lt-LT': 'Lithuanian',
+  'lv-LV': 'Latvian',
+  'ml-IN': 'Malayalam',
+  'mn-MN': 'Mongolian',
+  'ms-MY': 'Malay',
+  'nb-NO': 'Norwegian',
+  'nl-NL': 'Dutch',
+  'pl-PL': 'Polish',
+  'pt-PT': 'Portuguese (Portugal)',
+  'pt-BR': 'Portuguese (Brazil)',
+  'ro-RO': 'Romanian',
+  'ru-RU': 'Russian',
+  'si-LK': 'Sinhala',
+  'sk-SK': 'Slovak',
+  'sl-SI': 'Slovenian',
+  'sq-AL': 'Albanian',
+  'sr-RS': 'Serbian',
+  'sv-SE': 'Swedish',
+  'ta-IN': 'Tamil',
+  'te-IN': 'Telugu',
+  'th-TH': 'Thai',
+  'tr-TR': 'Turkish',
+  'uk-UA': 'Ukrainian',
+  'vi-VN': 'Vietnamese',
+  'zh-CN': 'Chinese (Simplified)',
+  'zh-TW': 'Chinese (Traditional)'
+} as const;
+
+export type LanguageCode = keyof typeof SUPPORTED_LANGUAGES;
+
 const fetchTMDB = async (endpoint: string, params: Record<string, string> = {}) => {
   const queryParams = new URLSearchParams(params).toString();
   const url = `${BASE_URL}${endpoint}?${queryParams}`;
@@ -68,30 +130,33 @@ const fetchTMDB = async (endpoint: string, params: Record<string, string> = {}) 
 }
 
 export const tmdb = {
-  getFeaturedMovies: (language = 'id-ID') => 
+  getFeaturedMovies: (language: LanguageCode = 'en-US') => 
     fetchTMDB('/trending/movie/week', { language }),
   
-  getTrendingMovies: (page = '1', language = 'id-ID') => 
+  getTrendingMovies: (page = '1', language: LanguageCode = 'en-US') => 
     fetchTMDB('/trending/movie/week', { page, language }),
   
-  getTopRatedTV: (page = '1', language = 'en-US') => 
+  getTopRatedTV: (page = '1', language: LanguageCode = 'en-US') => 
     fetchTMDB('/tv/top_rated', { page, language }),
   
-  getNowPlaying: (page = '1', language = 'id-ID', region = 'ID') => 
-    fetchTMDB('/movie/now_playing', { page, language, region }),
+  getNowPlaying: (page = '1', language: LanguageCode = 'en-US') => 
+    fetchTMDB('/movie/now_playing', { page, language }),
   
-  getMovieDetails: (id: string, language = 'id-ID') => 
+  getMovieDetails: (id: string, language: LanguageCode = 'en-US') => 
     fetchTMDB(`/movie/${id}`, { language }),
 
-  getMovieVideos: (id: string, language = 'en-US') =>
+  getMovieVideos: (id: string, language: LanguageCode = 'en-US') =>
     fetchTMDB(`/movie/${id}/videos`, { language }),
 
-  getMovieRecommendations: (id: string, language = 'en-US', page = '1') =>
+  getMovieRecommendations: (id: string, language: LanguageCode = 'en-US', page = '1') =>
     fetchTMDB(`/movie/${id}/recommendations`, { language, page }),
 
-  searchMovies: (query: string, page = '1', language = 'id-ID') =>
+  searchMovies: (query: string, page = '1', language: LanguageCode = 'en-US') =>
     fetchTMDB('/search/movie', { query, page, language, include_adult: 'false' }),
 
   getImageUrl: (path: string, size: string = 'original') => 
-    `${IMAGE_BASE_URL}/${size}${path}`
+    `${IMAGE_BASE_URL}/${size}${path}`,
+
+  // Helper function to get available languages
+  getAvailableLanguages: () => SUPPORTED_LANGUAGES
 };
