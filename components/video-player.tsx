@@ -3,14 +3,22 @@
 import { useState } from 'react';
 import { Play, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Movie, TVShow } from '@/lib/tmdb';
 
 interface VideoPlayerProps {
   movieId: string;
   movieTitle: string;
+  mediaType?: 'movie' | 'tv';
 }
 
-export function VideoPlayer({ movieId, movieTitle }: VideoPlayerProps) {
+export function VideoPlayer({ movieId, movieTitle, mediaType }: VideoPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
+
+  // Determine media type if not explicitly provided
+  const getEmbedUrl = () => {
+    const type = mediaType || 'movie';
+    return `https://vidsrc.xyz/embed/${type}/${movieId}`;
+  };
 
   if (isPlaying) {
     return (
@@ -23,7 +31,7 @@ export function VideoPlayer({ movieId, movieTitle }: VideoPlayerProps) {
           Close
         </Button>
         <iframe
-          src={`https://vidsrc.xyz/embed/movie/${movieId}`}
+          src={getEmbedUrl()}
           className="w-full h-full"
           allowFullScreen
           title={`Watch ${movieTitle}`}

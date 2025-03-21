@@ -1,13 +1,14 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Movie } from '@/lib/tmdb';
 import { tmdb } from '@/lib/tmdb';
 import { Heart } from 'lucide-react';
 import { toggleFavoriteMovie, isFavoriteMovie } from '@/lib/favorites';
-import { useState, useEffect } from 'react';
 import { cn, createMovieSlug } from '@/lib/utils';
 import { useSearchParams } from 'next/navigation';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface MovieCardProps {
   movie: Movie;
@@ -15,12 +16,18 @@ interface MovieCardProps {
 
 export function MovieCard({ movie }: MovieCardProps) {
   const [isFavorite, setIsFavorite] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const searchParams = useSearchParams();
   const lang = searchParams.get('lang');
 
   useEffect(() => {
     setIsFavorite(isFavoriteMovie(movie.id));
-  }, [movie.id]);
+
+    // Preload image
+    const img = new Image();
+    img.src = tmdb.getImageUrl(movie.poster_path, 'w500');
+    img.onload = () => setImageLoaded(true);
+  }, [movie.id, movie.poster_path]);
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -33,11 +40,17 @@ export function MovieCard({ movie }: MovieCardProps) {
   return (
     <div className="relative flex-shrink-0 group/card">
       <Link href={movieUrl} scroll={false}>
-        <div className="relative w-[200px] h-[300px] overflow-hidden rounded-md">
+        <div className="relative w-[200px] h-[300px] overflow-hidden rounded-md bg-muted">
+          {!imageLoaded && (
+            <div className="absolute inset-0 animate-pulse bg-muted/60" />
+          )}
           <img
             src={tmdb.getImageUrl(movie.poster_path, 'w500')}
             alt={movie.title}
-            className="w-full h-full object-cover"
+            className={cn(
+              "w-full h-full object-cover transition-opacity duration-300",
+              !imageLoaded && "opacity-0"
+            )}
           />
           <div className="absolute inset-0 bg-black opacity-0 group-hover/card:opacity-50 transition-opacity duration-300" />
           <div className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">

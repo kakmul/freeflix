@@ -27,6 +27,26 @@ export interface Movie {
   runtime?: number;
 }
 
+export interface TVShow {
+  id: number;
+  name: string;
+  original_name: string;
+  overview: string;
+  poster_path: string;
+  backdrop_path: string;
+  first_air_date: string;
+  vote_average: number;
+  vote_count: number;
+  popularity: number;
+  adult: boolean;
+  genre_ids: number[];
+  genres?: Genre[];
+  original_language: string;
+  media_type?: string;
+  number_of_seasons?: number;
+  number_of_episodes?: number;
+}
+
 export interface MovieVideo {
   iso_639_1: string;
   iso_3166_1: string;
@@ -48,6 +68,13 @@ export interface MovieVideoResponse {
 export interface MovieResponse {
   page: number;
   results: Movie[];
+  total_pages: number;
+  total_results: number;
+}
+
+export interface TVResponse {
+  page: number;
+  results: TVShow[];
   total_pages: number;
   total_results: number;
 }
@@ -151,8 +178,23 @@ export const tmdb = {
   getMovieRecommendations: (id: string, language: LanguageCode = 'en-US', page = '1') =>
     fetchTMDB(`/movie/${id}/recommendations`, { language, page }),
 
+  getTVShowDetails: (id: string, language: LanguageCode = 'en-US') =>
+    fetchTMDB(`/tv/${id}`, { language }),
+
+  getTVShowVideos: (id: string, language: LanguageCode = 'en-US') =>
+    fetchTMDB(`/tv/${id}/videos`, { language }),
+
+  getTVShowRecommendations: (id: string, language: LanguageCode = 'en-US', page = '1') =>
+    fetchTMDB(`/tv/${id}/recommendations`, { language, page }),
+
   searchMovies: (query: string, page = '1', language: LanguageCode = 'en-US') =>
     fetchTMDB('/search/movie', { query, page, language, include_adult: 'false' }),
+
+  searchTV: (query: string, page = '1', language: LanguageCode = 'en-US') =>
+    fetchTMDB('/search/tv', { query, page, language, include_adult: 'false' }),
+
+  searchMulti: (query: string, page = '1', language: LanguageCode = 'en-US') =>
+    fetchTMDB('/search/multi', { query, page, language, include_adult: 'false' }),
 
   getImageUrl: (path: string, size: string = 'original') => 
     `${IMAGE_BASE_URL}/${size}${path}`,

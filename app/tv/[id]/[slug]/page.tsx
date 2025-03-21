@@ -7,7 +7,7 @@ import { MovieRow } from '@/components/movie-row';
 import { notFound, redirect } from 'next/navigation';
 import { createMovieSlug } from '@/lib/utils';
 
-interface MoviePageProps {
+interface TVShowPageProps {
   params: {
     id: string;
     slug: string;
@@ -17,60 +17,40 @@ interface MoviePageProps {
   };
 }
 
-export async function generateMetadata({ params, searchParams }: MoviePageProps): Promise<Metadata> {
-  const movie = await tmdb.getMovieDetails(params.id, searchParams.lang as any);
+export async function generateMetadata({ params, searchParams }: TVShowPageProps): Promise<Metadata> {
+  const show = await tmdb.getTVShowDetails(params.id, searchParams.lang as any);
   
-  if (!movie || !movie.id) {
+  if (!show || !show.id) {
     notFound();
   }
   
   return {
-    title: `${movie.title} - 123Movies`,
-    description: movie.overview,
-    keywords: `${movie.title}, movie, 123Movies, streaming, ${movie.genres?.map((genre:any) => genre.name).join(', ')}`,
+    title: `${show.name} - 123Movies`,
+    description: show.overview,
+    keywords: `${show.name}, tv show, 123Movies, streaming, ${show.genres?.map((genre:any) => genre.name).join(', ')}`,
     openGraph: {
-      title: movie.title,
-      description: movie.overview,
-      images: [tmdb.getImageUrl(movie.backdrop_path)],
+      title: show.name,
+      description: show.overview,
+      images: [tmdb.getImageUrl(show.backdrop_path)],
     },
   };
 }
 
-export async function generateStaticParams() {
-  const [trending, topRated, nowPlaying] = await Promise.all([
-    tmdb.getTrendingMovies(),
-    tmdb.getTopRatedTV(),
-    tmdb.getNowPlaying(),
+export default async function TVShowPage({ params, searchParams }: TVShowPageProps) {
+  const [show, videos, recommendations] = await Promise.all([
+    tmdb.getTVShowDetails(params.id, searchParams.lang as any),
+    tmdb.getTVShowVideos(params.id, searchParams.lang as any),
+    tmdb.getTVShowRecommendations(params.id, searchParams.lang as any)
   ]);
 
-  // Filter out TV shows and only include movies that have a title
-  const movies = new Set([
-    ...trending.results.filter((item:any) => 'title' in item),
-    ...topRated.results.filter((item:any) => 'title' in item),
-    ...nowPlaying.results.filter((item:any) => 'title' in item),
-  ]);
-
-  return Array.from(movies).map((movie) => ({
-    id: String(movie.id),
-    slug: createMovieSlug(movie.title),
-  }));
-}
-
-export default async function MoviePage({ params, searchParams }: MoviePageProps) {
-  const [movie, videos, recommendations] = await Promise.all([
-    tmdb.getMovieDetails(params.id, searchParams.lang as any),
-    tmdb.getMovieVideos(params.id, searchParams.lang as any),
-    tmdb.getMovieRecommendations(params.id, searchParams.lang as any)
-  ]);
-
-  if (!movie || !movie.title) {
+  if (!show || !show.name) {
     notFound();
   }
 
-  // Verify the slug matches the movie title
-  const correctSlug = createMovieSlug(movie.title);
+  // Verify the slug matches the show name
+  const correctSlug = show.name.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
   if (params.slug !== correctSlug) {
-    redirect(`/movie/${params.id}/${correctSlug}${searchParams.lang ? `?lang=${searchParams.lang}` : ''}`);
+    redirect(`/tv/${params.id}/${correctSlug}${searchParams.lang ? `?lang=${searchParams.lang}` : ''}`);
   }
   
   return (
@@ -81,7 +61,7 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: `url(${tmdb.getImageUrl(movie.backdrop_path)})`,
+              backgroundImage: `url(${tmdb.getImageUrl(show.backdrop_path)})`,
             }}
           />
           <div className="absolute inset-0 netflix-gradient" />
@@ -90,20 +70,20 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
         
         <div className="relative pt-[20vh] container mx-auto px-4">
           <div className="max-w-2xl">
-            <h1 className="text-6xl font-bold mb-6">{movie.title}</h1>
+            <h1 className="text-6xl font-bold mb-6">{show.name}</h1>
             <div className="flex items-center gap-4 mb-6">
               <span className="text-green-500 font-semibold">
-                {Math.round(movie.vote_average * 10)}% Match
+                {Math.round(show.vote_average * 10)}% Match
               </span>
-              <span>{new Date(movie.release_date).getFullYear()}</span>
-              <span>{Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m</span>
+              <span>{new Date(show.first_air_date).getFullYear()}</span>
+              <span>{show.number_of_seasons} Season{show.number_of_seasons !== 1 ? 's' : ''}</span>
               <span className="border border-white/40 px-1 text-sm">HD</span>
             </div>
             
-            <p className="text-lg text-white/90 mb-8 line-clamp-3">{movie.overview}</p>
+            <p className="text-lg text-white/90 mb-8 line-clamp-3">{show.overview}</p>
             
             <div className="mb-12">
-              <VideoPlayer movieId={params.id} movieTitle={movie.title} mediaType="movie" />
+              <VideoPlayer movieId={params.id} movieTitle={show.name} mediaType="tv" />
             </div>
           </div>
 
@@ -113,13 +93,13 @@ export default async function MoviePage({ params, searchParams }: MoviePageProps
                 <div>
                   <span className="text-white/60">Cast:</span>{' '}
                   <span className="text-white/90">
-                    {movie.genres?.map((genre:any) => genre.name).join(', ')}
+                    {show.genres?.map((genre:any) => genre.name).join(', ')}
                   </span>
                 </div>
                 <div>
                   <span className="text-white/60">Genres:</span>{' '}
                   <span className="text-white/90">
-                    {movie.genres?.map((genre:any) => genre.name).join(', ')}
+                    {show.genres?.map((genre:any) => genre.name).join(', ')}
                   </span>
                 </div>
               </div>
