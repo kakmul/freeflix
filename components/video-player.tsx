@@ -17,7 +17,7 @@ export function VideoPlayer({ movieId, movieTitle, mediaType }: VideoPlayerProps
   // Determine media type if not explicitly provided
   const getEmbedUrl = () => {
     const type = mediaType || 'movie';
-    return `https://vidsrc.xyz/embed/${type}/${movieId}`;
+    return `https://vidsrc.cc/embed/${type}/${movieId}`;
   };
 
   if (isPlaying) {
