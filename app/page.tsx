@@ -2,6 +2,7 @@ import { tmdb } from '@/lib/tmdb';
 import { Navbar } from '@/components/navbar';
 import { FeaturedMovie } from '@/components/featured-movie';
 import { MovieRow } from '@/components/movie-row';
+import InvalidLicenseModal from '@/components/InvalidLicenseModal';
 
 export const metadata = {
   title: 'Netflix Clone - Watch Movies & TV Shows',
@@ -14,15 +15,30 @@ export default async function Home({
 }: {
   searchParams: { lang?: string }
 }) {
-  // Use search params with fallback to default
   const language = searchParams.lang || 'en-US';
 
-  const [featured, trending, topRated, nowPlaying] = await Promise.all([
-    tmdb.getFeaturedMovies(language as any),
-    tmdb.getTrendingMovies('1', language as any),
-    tmdb.getTopRatedTV('1', language as any),
-    tmdb.getNowPlaying('1', language as any),
-  ]);
+  // Fetch satu per satu agar bisa console.log
+  const featured = await tmdb.getFeaturedMovies(language as any);
+  //console.log('📽️ Featured Response:', featured);
+
+  const trending = await tmdb.getTrendingMovies('1', language as any);
+  //console.log('🔥 Trending Response:', trending);
+
+  const topRated = await tmdb.getTopRatedTV('1', language as any);
+  //console.log('⭐ Top Rated TV Response:', topRated);
+
+  const nowPlaying = await tmdb.getNowPlaying('1', language as any);
+  //console.log('🎬 Now Playing Response:', nowPlaying);
+
+  const hasLicenseError =
+  'error' in featured ||
+  'error' in trending ||
+  'error' in topRated ||
+  'error' in nowPlaying;
+
+if (hasLicenseError) {
+  return <InvalidLicenseModal />;
+}
 
   const featuredMovie = featured.results[0];
 

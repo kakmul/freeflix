@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation';
+
 const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const IMAGE_BASE_URL = process.env.NEXT_PUBLIC_IMAGE_BASE_UR;
@@ -79,6 +81,12 @@ export interface TVResponse {
   total_results: number;
 }
 
+export interface ErrorResponse {
+  error?: string;
+  success?: boolean;
+  status_message?: string;
+}
+
 // Supported languages based on TMDB API
 export const SUPPORTED_LANGUAGES = {
   'ar-AE': 'Arabic',
@@ -141,20 +149,72 @@ export const SUPPORTED_LANGUAGES = {
 
 export type LanguageCode = keyof typeof SUPPORTED_LANGUAGES;
 
-const fetchTMDB = async (endpoint: string, params: Record<string, string> = {}) => {
-  const queryParams = new URLSearchParams(params).toString();
-  const url = `${BASE_URL}${endpoint}?${queryParams}`;
+/**
+ * Fungsi untuk memvalidasi response dari TMDB API
+ * Akan melakukan redirect ke halaman lisensi tidak valid jika terdapat error
+ */
+const validateResponse = (json: any) => {
+  // Cek apakah response memiliki field error
+  if (json.error) {
+    console.error('[LICENSE ERROR]', json.error);
+    redirect('/invalid-license');
+  }
   
-  const response = await fetch(url, {
-    headers: {
-      'Authorization': `Bearer ${TMDB_API_KEY}`,
-      'accept': 'application/json'
-    },
-    next: { revalidate: 3600 } // Cache for 1 hour
-  });
+  // Cek beberapa format error lain yang mungkin
+  if (json.success === false && json.status_message) {
+    console.error('[API ERROR]', json.status_message);
+    
+    // Jika pesan error terkait lisensi atau domain
+    if (
+      json.status_message.toLowerCase().includes('invalid') || 
+      json.status_message.toLowerCase().includes('license') ||
+      json.status_message.toLowerCase().includes('domain') ||
+      json.status_message.toLowerCase().includes('purchase') ||
+      json.status_message.toLowerCase().includes('email')
+    ) {
+      redirect('/invalid-license');
+    }
+  }
+  
+  return json;
+};
 
-  return response.json();
-}
+const fetchTMDB = async (
+  endpoint: string,
+  params: Record<string, string> = {}
+) => {
+  const queryParams = new URLSearchParams({
+    ...params,
+    purchasedCode: 'PQR556677889',
+    email: 'themasmul@gmail.com'
+  }).toString();
+
+  const url = `${BASE_URL}${endpoint}?${queryParams}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${TMDB_API_KEY}`,
+        'accept': 'application/json',
+      },
+      cache: 'no-store'
+      //next: { revalidate: 3600 } // Cache for 1 hour
+    });
+
+    const json = await response.json();
+
+    // 🪵 Log the full request and response
+    console.log(`url`, url);
+    console.log(`[TMDB RESPONSE]`, JSON.stringify(json, null, 2));
+
+    // Validasi response sebelum mengembalikan hasilnya
+    return validateResponse(json);
+  } catch (error) {
+    console.error('[FETCH ERROR]', error);
+    // Jika terjadi error saat fetching, asumsikan ada masalah dengan lisensi
+    redirect('/invalid-license');
+  }
+};
 
 export const tmdb = {
   getFeaturedMovies: (language: LanguageCode = 'en-US') => 
