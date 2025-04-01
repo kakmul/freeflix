@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Movie } from '@/lib/tmdb';
-import { tmdb } from '@/lib/tmdb';
+import { Movie } from '@/lib/tmdb_backup';
+import { tmdb } from '@/lib/tmdb_backup';
 import { Heart } from 'lucide-react';
 import { toggleFavoriteMovie, isFavoriteMovie } from '@/lib/favorites';
 import { cn, createMovieSlug } from '@/lib/utils';

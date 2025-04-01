@@ -1,4 +1,4 @@
-import { Movie } from './tmdb';
+import { Movie } from './tmdb_backup';
 
 const FAVORITES_KEY = 'favorite_movies';
 

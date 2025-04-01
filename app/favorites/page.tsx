@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Navbar } from '@/components/navbar';
 import { MovieCard } from '@/components/ui/movie-card';
 import { getFavoriteMovies } from '@/lib/favorites';
-import { Movie } from '@/lib/tmdb';
+import { Movie } from '@/lib/tmdb_backup';
 
 export default function FavoritesPage() {
   const [favorites, setFavorites] = useState<Movie[]>([]);

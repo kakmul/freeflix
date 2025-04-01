@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
 import { Navbar } from '@/components/navbar';
 import { MovieCard } from '@/components/ui/movie-card';
-import { tmdb } from '@/lib/tmdb';
+import { tmdb } from '@/lib/tmdb_backup';
 import { MoviePagination } from '@/components/movie-pagination';
-import type { LanguageCode } from '@/lib/tmdb';
+import type { LanguageCode } from '@/lib/tmdb_backup';
 
 interface MoviesPageProps {
   searchParams: {

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Globe } from 'lucide-react';
-import { SUPPORTED_LANGUAGES, type LanguageCode } from '@/lib/tmdb';
+import { SUPPORTED_LANGUAGES, type LanguageCode } from '@/lib/tmdb_backup';
 
 interface LanguageSelectorProps {
   onLanguageChange: (language: LanguageCode) => void;

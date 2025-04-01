@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { TVShow } from '@/lib/tmdb';
-import { tmdb } from '@/lib/tmdb';
+import { TVShow } from '@/lib/tmdb_backup';
+import { tmdb } from '@/lib/tmdb_backup';
 import { Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSearchParams } from 'next/navigation';

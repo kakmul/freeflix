@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Search, Heart } from 'lucide-react';
 import { LanguageSelector } from '@/components/language-selector';
 import { MobileMenu } from '@/components/mobile-menu';
-import type { LanguageCode } from '@/lib/tmdb';
+import type { LanguageCode } from '@/lib/tmdb_backup';
 
 export function Navbar() {
   const router = useRouter();

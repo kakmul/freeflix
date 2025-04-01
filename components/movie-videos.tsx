@@ -1,6 +1,6 @@
 "use client";
 
-import { MovieVideo } from '@/lib/tmdb';
+import { MovieVideo } from '@/lib/tmdb_backup';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef } from 'react';
 import { Button } from './ui/button';

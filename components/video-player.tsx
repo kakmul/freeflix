@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Play, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Movie, TVShow } from '@/lib/tmdb';
+import { Movie, TVShow } from '@/lib/tmdb_backup';
 
 interface VideoPlayerProps {
   movieId: string;

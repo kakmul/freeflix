@@ -1,7 +1,7 @@
 "use client";
 
-import { Movie } from '@/lib/tmdb';
-import { tmdb } from '@/lib/tmdb';
+import { Movie } from '@/lib/tmdb_backup';
+import { tmdb } from '@/lib/tmdb_backup';
 import { Button } from '@/components/ui/button';
 import { Play, Info } from 'lucide-react';
 import Link from 'next/link';

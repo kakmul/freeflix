@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from 'react';
-import { Movie } from '@/lib/tmdb';
+import { Movie } from '@/lib/tmdb_backup';
 import { MovieCard } from '@/components/ui/movie-card';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
